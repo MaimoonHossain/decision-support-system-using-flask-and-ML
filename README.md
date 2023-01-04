@@ -1,2 +1,2 @@
-# toDoo-flask
-A web app for maintaining our To-Do list.
+# To Do List using Flask
+It is an app designed to help you manage your day-to-day tasks.
