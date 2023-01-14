@@ -72,6 +72,53 @@ def logout():
     session.pop('email', None)
     return redirect(url_for("home"))
 
+def getUserStats():
+    active_tasks = tasks.count_documents(
+        {'user': session['email'], 'status': 1})
+    completed_tasks = tasks.count_documents(
+        {'user': session['email'], 'status': 0})
+    try:
+        percent = int((completed_tasks/(active_tasks + completed_tasks))*100)
+    except ZeroDivisionError:
+        percent = 0
+
+    user_stats = {
+        'email': session['email'],
+        'name': users.find_one({'email': session['email']})['username'],
+        'completed': completed_tasks,
+        'rem_tasks': active_tasks,
+        'percent': percent
+    }
+    return user_stats
+
+@app.route("/updatePassword", methods=["POST"])
+def updatePassword():
+    msg = ""
+    x = users.find_one({'email': session['email']})
+    user_password = request.form["oldpasswd"]
+    if x['password'] == user_password:
+        new_password = request.form["newpasswd"]
+        users.update_one({'email': session['email']}, {
+                         '$set': {'password': new_password}})
+        msg = "Updated password successfully"
+    else:
+        msg = "Wrong password"
+
+    return render_template("profile.html", title="User profile", message=msg, user=getUserStats())
+
+
+@app.route("/deleteAccount", methods=["POST"])
+def deleteUser():
+    user_password = request.form["passwd"]
+    x = users.find_one({'email': session['email']})
+    if x['password'] == user_password:
+        users.delete_one({'email': session['email']})
+        tasks.delete_many({'email': session['email']})
+        return redirect(url_for("logout"))
+    else:
+        msg = "Wrong password. Account deletion failed."
+        return render_template("profile.html", title="User profile", message=msg, user=getUserStats())  
+
 
 @app.route("/markCompleted", methods=['POST'])
 def markCompleted():
@@ -86,7 +133,10 @@ def markAllCompleted():
     tasks.update_many({'user': session['email']}, {'$set': {'status': 0}})
     return '200'
 
-
+@app.route("/markIncomplete")
+def markAllIncomplete():
+    tasks.update_many({'user': session['email']}, {'$set': {'status': 1}})
+    return '200'
 
 @app.route("/addTask", methods=['POST'])
 def addTask():
@@ -100,6 +150,10 @@ def addTask():
     res = make_response(jsonify({'id': str(x.inserted_id)}), 200)  
     return res
 
+@app.route("/completed")
+def getCompletedTasks():
+    usr_inactive_tasks = tasks.find({'user': session['email'], 'status': 0})
+    return render_template("finished.html", title="Finished tasks", tasks=usr_inactive_tasks)
 
 @app.route("/deleteCompleted")
 def deleteCompletedTasks():
@@ -110,6 +164,10 @@ def deleteCompletedTasks():
 @app.route("/about")
 def about():
     return render_template("about.html", title="About")
+
+@app.route("/profile")
+def displayProfile():
+    return render_template("profile.html", title="User profile", message="", user=getUserStats())
 
 
 @app.route('/')
