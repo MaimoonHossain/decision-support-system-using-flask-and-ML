@@ -1,75 +1,152 @@
 {% extends 'base.html' %} {% block content %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/form.css') }}"
+    />
+    <title>Document</title>
+  </head>
+  <body>
+    <header class="header">
+      <h1 id="title" class="text-center">Decision Support System</h1>
+      <p id="description" class="text-center">
+        Find out if your anxiety could be a sign of something more serious.
+      </p>
+    </header>
 
-<h2><span id="greeting"></span>, {{ user }}!</h2>
-<br />
-<h3>Tasks ✔</h3>
-<br />
-<div id="tasks-section">
-  {% for task in tasks %}
-  <div class="checkbox-animated">
-    <input class="checkbox-input" id="{{ task['_id'] }}" type="checkbox" />
-    <label for="{{ task['_id'] }}">
-      <span class="check"></span>
-      <span class="box"></span>
-      {{ task['content'] }}
-    </label>
-  </div>
-  {% endfor %}
-</div>
+    <div class="form-wrap">
+      <form id="survey-form">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label id="name-label" for="name">Age</label>
+              <input
+                type="number"
+                name="age"
+                id="number"
+                min="10"
+                max="99"
+                class="form-control"
+                placeholder="Age"
+              />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label id="name-label" for="name">Low Alpha</label>
+              <input
+                type="text"
+                name="low_alpha"
+                id="low_alpha"
+                placeholder="Enter low alpha"
+                class="form-control"
+                required
+              />
+            </div>
+          </div>
+        </div>
 
-<div id="my-form" class="form" style="display: none">
-  <div class="form-group row">
-    <div class="col-lg-8">
-      <input
-        type="text"
-        name="newTask"
-        class="form-control"
-        id="newTask"
-        placeholder="Enter your task"
-        required
-      />
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label id="name-label" for="name">High Alpha</label>
+              <input
+                type="text"
+                name="high_alpha"
+                id="high_alpha"
+                placeholder="Enter high alpha"
+                class="form-control"
+                required
+              />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label id="name-label" for="name">Low Beta</label>
+              <input
+                type="text"
+                name="low_beta"
+                id="low_beta"
+                placeholder="Enter high alpha"
+                class="form-control"
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label id="name-label" for="name">High Beta</label>
+              <input
+                type="text"
+                name="high_beta"
+                id="high_beta"
+                placeholder="Enter high alpha"
+                class="form-control"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label id="name-label" for="name">Low Gamma</label>
+              <input
+                type="text"
+                name="low_gamma"
+                id="low_gamma"
+                placeholder="Enter high alpha"
+                class="form-control"
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label id="name-label" for="name">High Gamma</label>
+              <input
+                type="text"
+                name="high_gamma"
+                id="high_gamma"
+                placeholder="Enter high alpha"
+                class="form-control"
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-4">
+            <button type="submit" id="submit" class="btn btn-primary btn-block">
+              Submit
+            </button>
+          </div>
+        </div>
+      </form>
     </div>
-    <button
-      id="task-add-button"
-      style="margin-right: 1%"
-      class="btn btn-success"
-    >
-      Add
-    </button>
-    <button
-      style="margin-right: 1%"
-      class="btn btn-danger"
-      onclick="hideForm()"
-    >
-      <i class="fas fa-times"></i>
-    </button>
-  </div>
-</div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
 
-<div style="display: none" id="no-task-indicator">
-  <span style="font-size: larger">No tasks 🥳</span>
-</div>
-
-<br /><br />
-<button
-  class="task-buttons btn btn-primary"
-  data-toggle="tooltip"
-  data-placement="bottom"
-  title="Add a new task"
-  onclick="showForm()"
->
-  <i class="fas fa-plus"></i>
-</button>
-<button
-  class="task-buttons btn"
-  style="background-color: green; color: #fff"
-  data-toggle="tooltip"
-  data-placement="bottom"
-  title="Mark all as done"
-  onclick="clearAllTasks()"
->
-  <i class="fas fa-check"></i>
-</button>
-<br /><br />
-<script src="{{ url_for('static', filename='js/index.js') }}"></script>
 {% endblock %}
